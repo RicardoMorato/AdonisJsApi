@@ -15,7 +15,7 @@ class MessageController {
    * GET messages
    */
   async index() {
-    const messages = await Message.all();
+    const messages = await Message.query().with("user").fetch();
 
     return messages;
   }
@@ -37,7 +37,10 @@ class MessageController {
    * GET messages/:id
    */
   async show({ params }) {
-    const message = await Message.findOrFail(params.id);
+    const message = await Message.query()
+      .where("user_id", "=", params.id)
+      .with("user")
+      .fetch();
 
     return message;
   }
